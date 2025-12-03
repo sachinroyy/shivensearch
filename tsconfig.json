@@ -4,6 +4,8 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
+    
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -28,7 +30,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "types/**/*.d.ts"
   ],
+  "typeRoots": ["./node_modules/@types", "./types"],
   "exclude": ["node_modules"]
 }
