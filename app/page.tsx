@@ -9,7 +9,6 @@ export default function Page() {
       <Home/>
       <Patient/>  
       <Kiwi/>
-      {/* <Growth/> */}
       
       <Footer/>
     </>
