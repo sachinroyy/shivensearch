@@ -4,6 +4,29 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Grid from '@mui/material/GridLegacy';
 
+interface Doctor {
+  _id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  specialization: string;
+  experience: string;
+  image: string;
+  consultationFee: number;
+  category: string;
+  address: string;
+  degree: string;
+  clinicName: string;
+  registrationAgency: string;
+  registrationNumber: string;
+  availableDates: Array<{
+    date: string;
+    timeSlots: string[];
+    isBooked: boolean;
+    _id: string;
+  }>;
+}
+
 import {
   Container,
   Typography,
@@ -108,22 +131,16 @@ function BookingContent() {
     appointmentType: 'online',
     date: '',
     time: '',
-    userId: 'guest' // Default user ID for unauthenticated users
+    userId: 'guest', // Default user ID for unauthenticated users
+    selectedDate: ''
   });
+  
+  const [selectedDateSlots, setSelectedDateSlots] = useState<string[]>([]);
+  const [showDateSlots, setShowDateSlots] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [doctor, setDoctor] = useState<{
-    category: any;
-    phone: string;
-    address: any;
-    name: string;
-    email: string;
-    specialization?: string;
-    experience?: string;
-    image?: string;
-    consultationFee?: number;
-  } | null>(null);
+  const [doctor, setDoctor] = useState<Doctor | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -151,7 +168,17 @@ function BookingContent() {
             phone: doc.phone,
             consultationFee: doc.consultationFee || doc.price || 500,
             category: doc.category,
-            address: doc.address
+            address: doc.address,
+            degree: doc.degree,
+            clinicName: doc.clinicName,
+
+            registrationAgency: doc.registrationAgency,
+            registrationNumber: doc.registrationNumber,
+            availableDates: doc.availableDates || [],
+            // consultationFee: doc.consultationFee || doc.price || 500,
+
+
+         
           });
         }
       } catch (error) {
@@ -181,6 +208,14 @@ function BookingContent() {
     setIsSubmitting(true);
 
     try {
+      // Format the date to YYYY-MM-DD
+      const formattedDate = formData.date ? new Date(formData.date).toISOString().split('T')[0] : '';
+      
+      // Combine date and time into a single ISO string
+      const dateTimeString = formData.date && formData.time 
+        ? `${formattedDate}T${formData.time}:00.000Z` 
+        : '';
+
       const response = await fetch('/api/appointments', {
         method: 'POST',
         headers: {
@@ -188,11 +223,12 @@ function BookingContent() {
         },
         body: JSON.stringify({
           ...formData,
+          date: formattedDate, // Use the formatted date
+          dateTime: dateTimeString, // Add the combined date-time string
           doctorId,
           doctorName,
           doctorEmail: doctorName,
-          userId: formData.userId || 'guest', // Ensure userId is always present
-          // You might want to pass the actual doctor's email here
+          userId: formData.userId || 'guest',
         }),
       });
 
@@ -214,7 +250,8 @@ function BookingContent() {
         appointmentType: 'online',
         date: '',
         time: '',
-        userId: 'guest' // Keep the userId in the reset form
+        userId: 'guest',
+        selectedDate: ''
       });
 
       // Redirect to home after 2 seconds
@@ -339,7 +376,9 @@ function BookingContent() {
                       <Typography variant="subtitle1" fontWeight={600} color="primary">
                         {doctor.experience || '5+'} Years
                       </Typography>
+                      
                     </Box>
+                    
                     
                     {doctor.category && (
                       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
@@ -359,7 +398,42 @@ function BookingContent() {
                       <Typography variant="h6" color="primary" fontWeight={700}>
                         ₹{doctor.consultationFee || '500'}
                       </Typography>
-                    </Box>
+                      </Box>
+                        <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          Degree
+                        </Typography>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          {doctor.degree || 'Not specified'}
+                        </Typography>
+                      </Box>
+                       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="subtitle2" color="text.secondary">
+                         clinicName & address 
+                        </Typography>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          {doctor.clinicName || 'Not specified'}
+                        </Typography>
+                      </Box>
+                       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          registrationAgency
+                        </Typography>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          {doctor.registrationAgency || 'Not specified'}
+                        </Typography>
+                      </Box>
+                       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          registrationNumber 
+                        </Typography>
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          {doctor.registrationNumber || 'Not specified'}
+                        </Typography>
+                      </Box>
+                      
+                      
+                      
                   </Box>
                 </Box>
 
@@ -469,6 +543,7 @@ function BookingContent() {
             <Typography
               variant="h5"
               component="h1"
+              align="center"
               gutterBottom
               sx={{
                 fontWeight: 700,
@@ -480,15 +555,10 @@ function BookingContent() {
             </Typography>
             {doctorName && (
               <Box
-                sx={{
-                  mb: 4,
-                  p: 3,
-                  bgcolor: alpha(theme.palette.primary.light, 0.1),
-                  borderRadius: 2,
-                  borderLeft: `4px solid ${theme.palette.primary.main}`,
-                }}
+                
+                
               >
-                <Typography
+                {/* <Typography
                   variant="h6"
                   sx={{
                     color: theme.palette.primary.dark,
@@ -498,7 +568,7 @@ function BookingContent() {
                   }}
                 >
                   <span style={{ fontWeight: 600 }}>Doctor:</span> {doctorName}
-                </Typography>
+                </Typography> */}
               </Box>
             )}
             <Box component="form" onSubmit={handleSubmit}>
@@ -538,7 +608,6 @@ function BookingContent() {
                 <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
-                    required
                     label="Email"
                     name="email"
                     type="email"
@@ -546,6 +615,90 @@ function BookingContent() {
                     onChange={handleChange}
                     variant="outlined"
                   />
+                </Grid>
+
+                {/* Available Dates Section */}
+                <Grid item xs={12}>
+                  <Typography variant="subtitle1" fontWeight={600} mb={1}>
+                    Available Dates & Time Slots
+                  </Typography>
+                  <Box sx={{ 
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: 2,
+                    p: 2,
+                    mb: 2
+                  }}>
+                    {doctor?.availableDates?.length > 0 ? (
+                      <Grid container spacing={2}>
+                        {doctor.availableDates.map((dateInfo) => (
+                          <Grid item xs={12} sm={6} md={4} key={dateInfo._id}>
+                            <Paper 
+                              elevation={formData.selectedDate === dateInfo.date ? 3 : 0}
+                              onClick={() => {
+                                setFormData(prev => ({...prev, selectedDate: dateInfo.date, date: dateInfo.date}));
+                                setSelectedDateSlots(dateInfo.timeSlots);
+                                setShowDateSlots(true);
+                              }}
+                              sx={{
+                                p: 2,
+                                cursor: 'pointer',
+                                border: formData.selectedDate === dateInfo.date 
+                                  ? `2px solid ${theme.palette.primary.main}` 
+                                  : '1px solid #e0e0e0',
+                                borderRadius: 2,
+                                '&:hover': {
+                                  borderColor: theme.palette.primary.main,
+                                  backgroundColor: 'action.hover'
+                                }
+                              }}
+                            >
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {new Date(dateInfo.date).toLocaleDateString('en-US', {
+                                  weekday: 'short',
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {dateInfo.timeSlots.length} time slots available
+                              </Typography>
+                            </Paper>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    ) : (
+                      <Typography color="text.secondary" variant="body2">
+                        No available dates at the moment. Please check back later.
+                      </Typography>
+                    )}
+                  </Box>
+
+                  {showDateSlots && selectedDateSlots.length > 0 && (
+                    <Box mt={2}>
+                      <Typography variant="subtitle2" fontWeight={600} mb={1}>
+                        Available Time Slots for {formData.selectedDate && new Date(formData.selectedDate).toLocaleDateString()}
+                      </Typography>
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {selectedDateSlots.map((time, index) => (
+                          <Chip
+                            key={index}
+                            label={time}
+                            onClick={() => setFormData(prev => ({...prev, time}))}
+                            color={formData.time === time ? 'primary' : 'default'}
+                            variant={formData.time === time ? 'filled' : 'outlined'}
+                            sx={{
+                              '&:hover': {
+                                backgroundColor: theme.palette.primary.light,
+                                color: theme.palette.primary.contrastText
+                              }
+                            }}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
                 </Grid>
 
                 <Grid item xs={12} md={6}>
@@ -607,7 +760,7 @@ function BookingContent() {
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12} md={6}>
+                {/* <Grid item xs={12} md={6}>
                   <TextField
                     fullWidth
                     required
@@ -634,7 +787,8 @@ function BookingContent() {
                     onChange={handleChange}
                     variant="outlined"
                   />
-                </Grid>
+                </Grid> */}
+                
 
                 {submitError && (
                   <Grid item xs={12}>

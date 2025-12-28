@@ -99,43 +99,9 @@ export default function KiwiPage() {
                 ))}
               </List>
               
-              <Box sx={{ display: 'flex', gap: 2, mt: 4 }}>
-                <Button 
-                  variant="contained" 
-                  startIcon={<AndroidIcon />}
-                  sx={{ 
-                    borderRadius: '8px',
-                    textTransform: 'none',
-                    px: 3,
-                    py: 1
-                  }}
-                >
-                  Android
-                </Button>
-                <Button 
-                  variant="contained" 
-                  startIcon={<AppleIcon />}
-                  sx={{ 
-                    borderRadius: '8px',
-                    textTransform: 'none',
-                    px: 3,
-                    py: 1,
-                    bgcolor: 'black',
-                    '&:hover': {
-                      bgcolor: '#333'
-                    }
-                  }}
-                >
-                  iOS
-                </Button>
-              </Box>
               
-              <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', color: 'text.secondary' }}>
-                <SmartphoneIcon sx={{ mr: 1 }} />
-                <Typography variant="body2">
-                  Also available on web at SHIVENCLINIC.COM
-                </Typography>
-              </Box>
+              
+              
             </Box>
           </Grid>
         </Grid>

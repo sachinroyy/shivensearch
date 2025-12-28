@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent, ReactNode } from 'react';
 import Grid from '@mui/material/GridLegacy';
 import {
   Box,
@@ -102,12 +102,18 @@ interface AvailableDate {
 }
 
 interface Doctor {
+  registrationNumber: ReactNode;
+  registrationAgency: ReactNode;
+  
+  clinicName: ReactNode;
   _id?: string;
   name: string;
   email: string;
   phone: string;
   address: string;
   experience: number;
+  degree: string;
+
   category: string;
   price: number;
   image: string;
@@ -129,6 +135,10 @@ interface FormData {
   specialization: string;
   price: string;
   image: string;
+  clinicName: string;
+  degree: string;
+  registrationAgency: string;
+  registrationNumber: string;
   availableDates: Array<{
     date: string;
     timeSlots: string[];
@@ -148,6 +158,10 @@ export default function AddDoctorPage() {
     specialization: '',
     price: '',
     image: '',
+    clinicName: '',
+    degree: '',
+    registrationAgency: '',
+    registrationNumber: '',
     availableDates: [],
     newDate: '',
     newTimeSlot: ''
@@ -325,7 +339,7 @@ export default function AddDoctorPage() {
   const resetForm = () => {
     setFormData({
       name: '',
-      email: '',
+      email: userEmail || '',
       phone: '',
       address: '',
       experience: '',
@@ -333,6 +347,10 @@ export default function AddDoctorPage() {
       specialization: '',
       price: '',
       image: '',
+      clinicName: '',
+      degree: '',
+      registrationAgency: '',
+      registrationNumber: '',
       availableDates: [],
       newDate: '',
       newTimeSlot: ''
@@ -353,6 +371,10 @@ export default function AddDoctorPage() {
       specialization: (doctor as any).specialization || '',
       price: doctor.price.toString(),
       image: doctor.image,
+      clinicName: (doctor as any).clinicName || '',
+      degree: (doctor as any).degree || '',
+      registrationAgency: (doctor as any).registrationAgency || '',
+      registrationNumber: (doctor as any).registrationNumber || '',
       availableDates: doctor.availableDates || [],
       newDate: '',
       newTimeSlot: ''
@@ -432,10 +454,14 @@ export default function AddDoctorPage() {
         phone: formData.phone.trim(),
         address: formData.address.trim(),
         experience: Number(formData.experience) || 0,
-        category: formData.category,              // CATEGORY ALONE
-  specialization: formData.specialization,  // SPECIALIZATION SEPARATE VALUE
+        category: formData.category,
+        specialization: formData.specialization,
         price: Number(formData.price) || 0,
         image: formData.image,
+        clinicName: formData.clinicName.trim(),
+        degree: formData.degree.trim(),
+        registrationAgency: formData.registrationAgency.trim(),
+        registrationNumber: formData.registrationNumber.trim(),
         availableDates: formData.availableDates,
         isVerified: false,
         isActive: true,
@@ -621,6 +647,89 @@ export default function AddDoctorPage() {
                   ))}
                 </Select>
               </FormControl>
+            </Grid>
+
+            {/* Clinic Name */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Name of Clinic"
+                name="clinicName"
+                value={formData.clinicName}
+                onChange={handleInputChange}
+                variant="outlined"
+                margin="normal"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <HomeIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+
+            {/* Degree */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="degree"
+                name="degree"
+                value={formData.degree}
+                onChange={handleInputChange}
+                variant="outlined"
+                margin="normal"
+                placeholder="e.g., MBBS, MD, MS"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <WorkIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+
+            {/* Registration Agency */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Registration Agency"
+                name="registrationAgency"
+                value={formData.registrationAgency}
+                onChange={handleInputChange}
+                variant="outlined"
+                margin="normal"
+                placeholder="e.g., MCI, State Medical Council"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <WorkIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
+
+            {/* Registration Number */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Registration Number"
+                name="registrationNumber"
+                value={formData.registrationNumber}
+                onChange={handleInputChange}
+                variant="outlined"
+                margin="normal"
+                placeholder="e.g., MCI12345"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <WorkIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
             </Grid>
 
             {/* Price */}
@@ -850,6 +959,13 @@ export default function AddDoctorPage() {
                 <TableCell>Specialization</TableCell>
                 <TableCell>Experience</TableCell>
                 <TableCell>Actions</TableCell>
+                <TableCell>clinicName</TableCell>
+                <TableCell>degree</TableCell>
+                <TableCell>registrationAgency</TableCell>
+                <TableCell>registrationNumber</TableCell>
+                <TableCell>availableDates</TableCell>
+
+
               </TableRow>
             </TableHead>
             <TableBody>
@@ -891,7 +1007,35 @@ export default function AddDoctorPage() {
                       <DeleteIcon />
                     </IconButton>
                   </TableCell>
+                   <TableCell>{doctor.clinicName}</TableCell>
+                  <TableCell>{doctor.degree}</TableCell>
+                  <TableCell>{doctor.registrationAgency}</TableCell>
+                  <TableCell>{doctor.registrationNumber}</TableCell>
+                  <TableCell>
+                    {doctor.availableDates.map((date, index) => (
+                      <div key={index} style={{ marginBottom: '8px' }}>
+                        <div style={{ fontWeight: 'bold' }}>
+                          {new Date(date.date).toLocaleDateString('en-IN', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            weekday: 'short'
+                          })}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#666' }}>
+                          {date.timeSlots.length > 0 ? (
+                            date.timeSlots.join(', ')
+                          ) : (
+                            <span style={{ color: '#999' }}>No time slots</span>
+                          )}
+                        </div>
+                        {index < doctor.availableDates.length - 1 && <hr style={{ margin: '4px 0' }} />}
+                      </div>
+                    ))}
+                  </TableCell>
+
                 </TableRow>
+                
               ))}
             </TableBody>
           </Table>

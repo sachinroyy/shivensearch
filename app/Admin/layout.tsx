@@ -101,11 +101,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const menuItems: MenuItem[] = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/Admin/dashboard' },
-    { text: 'profile', icon: <HowToRegIcon />, path: '/Admin/dashboard/adddoctors' },
+    { text: 'Profile', icon: <HowToRegIcon />, path: '/Admin/dashboard/adddoctors' },
     
     { text: 'Subscriptions Plans', icon: <SubscriptionsIcon />, path: '/Admin/dashboard/plans' },
-    { text: 'Subscriber Details', icon: <PeopleIcon />, path: '/Admin/dashboard/subscribers' },
-    { text: 'Contact Us', icon: <ContactMailIcon />, path: '/Admin/dashboard/contactus' },
+    // { text: 'Subscriber Details', icon: <PeopleIcon />, path: '/Admin/dashboard/subscribers' },
+    // { text: 'Contact Us', icon: <ContactMailIcon />, path: '/Admin/dashboard/contactus' },
     { text: 'Contact Developer', icon: <DeveloperModeIcon />, path: '/Admin/dashboard/contactdeveloper' },
     { text: 'CRM', icon: <DashboardCustomizeIcon />, path: '/Admin/dashboard/crm' },
   ];
@@ -113,10 +113,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   // Drawer content
   const drawer = (
     <div>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div" sx={{ fontWeight: 'bold', color: 'primary.main' }}>
-          Admin Panel
-        </Typography>
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        
+        {user?.name && (
+          <Typography variant="subtitle1" component="div" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+            Welcome, {user.name}
+          </Typography>
+        )}
       </Toolbar>
       <Divider />
       <List>

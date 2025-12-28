@@ -34,11 +34,10 @@ export default function Footer() {
       sx={{ 
         bgcolor: '#e6f7ff', 
         color: 'text.primary',
-        pt: 8,
-        pb: 4
+        
       }}
     >
-      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 2, md: 5 } }}>
         <Grid container spacing={{ xs: 8, md: 12 }}>
           {/* About Us */}
           <Grid item xs={12} sm={6} md={3} sx={{ mb: { xs: 4, md: 0 } }}>
@@ -64,7 +63,7 @@ export default function Footer() {
             >
               About Us
             </Typography>
-            <Typography variant="body2" sx={{ mt: 4, mb: 4, color: 'text.secondary', lineHeight: 1.8 }}>
+            <Typography variant="body2" sx={{ mt: 4, mb: 4, color: 'text.secondary', lineHeight: 1.8  }}>
               We are committed to providing the highest quality <br /> healthcare services to our<br /> patients with compassion and excellence.
             </Typography>
             <Box sx={{ display: 'flex', gap: 3, mt: 6, mb: 4 }}>
@@ -133,10 +132,10 @@ export default function Footer() {
                 }
               }}
             >
-              Quick Links
+             Our Services
             </Typography>
             <List dense sx={{ '& .MuiListItem-root': { py: 1 } }}>
-              {['About Us', 'Services', 'Our Doctors', 'Appointment', 'contactus'].map((item) => (
+              {[ 'Health Checkup', 'Patient Management', 'Appointment Scheduling', 'Follow-up Management', ].map((item) => (
                 <ListItem 
                   key={item} 
                   disableGutters 
@@ -187,36 +186,41 @@ export default function Footer() {
                 }
               }}
             >
-              Our Services
+              *
             </Typography>
-            <List dense sx={{ '& .MuiListItem-root': { py: 1 } }}>
-              {['Primary Care', 'Emergency Care', 'Dental Care', 'Diagnosis', 'Health Checkup'].map((service) => (
-                <ListItem 
-                  key={service} 
-                  disableGutters 
-                  sx={{ 
-                    py: 1,
-                    '&:hover': { '& .MuiTypography-root': { color: 'primary.main' } }
-                  }}
-                >
-                  <MuiLink 
-                    component={Link} 
-                    href={`#${service.toLowerCase().replace(' ', '-')}`}
-                    color="text.secondary"
-                    underline="none"
-                    sx={{ 
-                      display: 'flex',
-                      alignItems: 'center',
-                      transition: 'color 0.3s',
-                      '&:hover': { color: 'primary.main' }
-                    }}
-                  >
-                    <span style={{ marginRight: '8px' }}>•</span>
-                    {service}
-                  </MuiLink>
-                </ListItem>
-              ))}
-            </List>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: { xs: 2, md: 8 } }}>
+              <Box sx={{ minWidth: '180px' }}>
+                <List dense disablePadding>
+                  {['Primary Care', 'Emergency Care', 'Dental Care', 'Diagnosis'].map((service) => (
+                    <ListItem 
+                      key={service} 
+                      disableGutters 
+                      sx={{ 
+                        py: 1,
+                        '&:hover': { '& .MuiTypography-root': { color: 'primary.main' } }
+                      }}
+                    >
+                      <MuiLink 
+                        component={Link} 
+                        href={`#${service.toLowerCase().replace(/\s+/g, '-')}`}
+                        color="text.secondary"
+                        underline="none"
+                        sx={{ 
+                          display: 'flex',
+                          alignItems: 'center',
+                          transition: 'color 0.3s',
+                          '&:hover': { color: 'primary.main' }
+                        }}
+                      >
+                        <span style={{ marginRight: '8px', whiteSpace: 'nowrap' }}>•</span>
+                        {service}
+                      </MuiLink>
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+             
+            </Box>
           </Grid>
 
           {/* Contact Us */}
@@ -244,15 +248,7 @@ export default function Footer() {
               Contact Us
             </Typography>
             <List dense sx={{ '& .MuiListItem-root': { py: 1 } }}>
-              <ListItem disableGutters sx={{ alignItems: 'flex-start', pb: 1 }}>
-                <ListItemIcon sx={{ minWidth: 32, mt: 0.5 }}>
-                  <LocationIcon color="primary" fontSize="small" />
-                </ListItemIcon>
-                <ListItemText 
-                  primary="123 Medical Street, Health District, "
-                  primaryTypographyProps={{ variant: 'body2', color: 'text.secondary' }}
-                />
-              </ListItem>
+             
               <ListItem disableGutters sx={{ py: 1 }}>
                 <ListItemIcon sx={{ minWidth: 32 }}>
                   <PhoneIcon color="primary" fontSize="small" />
@@ -263,22 +259,10 @@ export default function Footer() {
                   underline="hover"
                   sx={{ '&:hover': { color: 'primary.main' } }}
                 >
-                  +91 12345 67890
+                  +91 70392 05715
                 </MuiLink>
               </ListItem>
-              <ListItem disableGutters sx={{ pt: 1 }}>
-                <ListItemIcon sx={{ minWidth: 32 }}>
-                  <EmailIcon color="primary" fontSize="small" />
-                </ListItemIcon>
-                <MuiLink 
-                  href="mailto:info@shivenclinic.com" 
-                  color="text.secondary" 
-                  underline="hover"
-                  sx={{ '&:hover': { color: 'primary.main' } }}
-                >
-                  info@shivenclinic.com
-                </MuiLink>
-              </ListItem>
+
             </List>
           </Grid>
         </Grid>

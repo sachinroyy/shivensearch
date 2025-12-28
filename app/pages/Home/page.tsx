@@ -302,7 +302,7 @@ export default function DoctorListing() {
           gap: 2
         }}
       >
-        <Button 
+        {/* <Button 
           component={Link}
           href="/pages/contactus"
           variant="outlined"
@@ -327,7 +327,7 @@ export default function DoctorListing() {
           }}
         >
           Contact Us
-        </Button>
+        </Button> */}
         <Button 
           variant="outlined" 
           color="primary"

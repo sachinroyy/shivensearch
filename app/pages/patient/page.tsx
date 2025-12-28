@@ -25,21 +25,20 @@ export default function PatientPortal() {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const features = [
-    { title: 'Doctor Search & Booking', items: [
+    { title: 'SHIVEN is your 24/7 AI health assistant for managing all your care needs at Shiven Clinic."', items: [
      
     ]},
-    { title: 'Medical Records', items: [
-      
-    ]},
-    { title: 'Appointment Management', items: [
+     { title: '"This software is designed to be easy to use, simple to manage, and smooth to maintain for everyone."', items: [
 
     ]},
-    { title: 'Prescription Management', items: [
+       
+    { title: 'Find and book appointments with doctors', items: [
+
+    ]},
+    { title: 'Effortless Appointment Management', items: [
       
     ]},
-    { title: 'Billing & Insurance', items: [
-      
-    ]}
+    
     
     
   ];
